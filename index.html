@@ -264,6 +264,144 @@
       opacity: 1;
     }
 
+    /* 快捷提示词标签 */
+    .prompt-tags-section {
+      margin-top: 8px;
+    }
+
+    .prompt-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .prompt-tag {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--accent);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .prompt-tag:hover {
+      background: rgba(212, 175, 55, 0.3);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .prompt-tag:active {
+      transform: translateY(0);
+    }
+
+    /* 操作指南弹窗 */
+    .guide-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .guide-modal.show {
+      display: flex;
+    }
+
+    .guide-content {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .guide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .guide-title {
+      font-size: 16px;
+      color: var(--accent);
+      margin: 0;
+    }
+
+    .guide-close {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .guide-close:hover {
+      color: #fff;
+    }
+
+    .guide-body {
+      color: var(--text-main);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .guide-body ul {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    .guide-body li {
+      margin: 6px 0;
+    }
+
+    .guide-footer {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .guide-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .guide-btn-primary {
+      background: linear-gradient(135deg, var(--accent), #b89628);
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .guide-btn-primary:hover {
+      filter: brightness(1.1);
+    }
+
+    .guide-btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ccc;
+      border: 1px solid var(--glass-border);
+    }
+
+    .guide-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
     /* 按钮 */
     .btn-main {
       background: linear-gradient(135deg, var(--accent), #b89628);
@@ -829,6 +967,18 @@
         <textarea id="prompt" placeholder="输入图片描述，支持中英文"></textarea>
       </div>
 
+      <div class="prompt-tags-section">
+        <label>快捷提示词（点击自动填充）</label>
+        <div class="prompt-tags">
+          <button class="prompt-tag" data-prompt="分析这张手相，详细解读生命线、智慧线、感情线的含义，给出运势分析" data-guide="hand">🔮 手相分析</button>
+          <button class="prompt-tag" data-prompt="一位美丽的亚洲女性，精致五官，自然妆容，柔和光线，高质量肖像摄影" data-guide="beauty">👩 美女肖像</button>
+          <button class="prompt-tag" data-prompt="美团外卖店铺海报，美食展示，鲜艳色彩，促销信息，吸引人的设计" data-guide="poster">🍔 美团海报</button>
+          <button class="prompt-tag" data-prompt="修复这张老照片，去除划痕和污渍，恢复色彩，提高清晰度，保留原有风格" data-guide="restore">📷 老照片修复</button>
+          <button class="prompt-tag" data-prompt="专业证件照，白底，正装，正面照，清晰五官，标准证件照格式" data-guide="idphoto">📄 证件照</button>
+          <button class="prompt-tag" data-prompt="将这张照片转换为动漫风格，日式漫画风格，鲜艳色彩，清晰线条" data-guide="anime">🎨 动漫风格</button>
+        </div>
+      </div>
+
       <div class="inline-row">
         <label>模型</label>
         <select id="modelSelect">
@@ -893,6 +1043,23 @@
 
   <!-- Fixed History Button -->
   <button class="btn-history" onclick="openHistory()">📋 历史</button>
+
+  <!-- Guide Modal -->
+  <div class="guide-modal" id="guideModal">
+    <div class="guide-content">
+      <div class="guide-header">
+        <h3 class="guide-title" id="guideTitle">操作指南</h3>
+        <button class="guide-close" onclick="closeGuide()">✕</button>
+      </div>
+      <div class="guide-body" id="guideBody">
+        <!-- 动态内容 -->
+      </div>
+      <div class="guide-footer">
+        <button class="guide-btn guide-btn-secondary" onclick="closeGuide()">取消</button>
+        <button class="guide-btn guide-btn-primary" onclick="confirmGuide()">确定使用</button>
+      </div>
+    </div>
+  </div>
 
   <!-- History Modal -->
   <div class="history-modal" id="historyModal">
@@ -1851,6 +2018,130 @@
         navigator.clipboard.writeText('lafa2046');
         msg('微信号已复制');
       };
+
+      // ====== 快捷提示词功能 ======
+      const guideContents = {
+        hand: {
+          title: '🔮 手相分析操作指南',
+          content: `
+            <p><strong>使用步骤：</strong></p>
+            <ul>
+              <li>上传清晰的掌纹照片（建议自然光线下拍摄）</li>
+              <li>确保手掌完整可见，纹路清晰</li>
+              <li>点击"确定使用"自动填充提示词</li>
+              <li>选择合适模型后点击生成</li>
+            </ul>
+            <p style="color: var(--accent); margin-top: 12px;">💡 提示：照片越清晰，分析结果越准确</p>
+          `
+        },
+        beauty: {
+          title: '👩 美女肖像操作指南',
+          content: `
+            <p><strong>使用步骤：</strong></p>
+            <ul>
+              <li>直接点击"确定使用"生成美女肖像</li>
+              <li>或上传参考照片进行风格迁移</li>
+              <li>可修改提示词调整细节（发型、服装等）</li>
+              <li>建议选择 1:1 或 9:16 比例</li>
+            </ul>
+            <p style="color: var(--accent); margin-top: 12px;">💡 提示：添加具体描述可获得更精准效果</p>
+          `
+        },
+        poster: {
+          title: '🍔 美团海报操作指南',
+          content: `
+            <p><strong>使用步骤：</strong></p>
+            <ul>
+              <li>上传美食照片作为参考</li>
+              <li>点击"确定使用"填充海报提示词</li>
+              <li>可修改提示词添加促销信息</li>
+              <li>建议选择 1:1 或 3:4 比例</li>
+            </ul>
+            <p style="color: var(--accent); margin-top: 12px;">💡 提示：上传高质量美食图效果更佳</p>
+          `
+        },
+        restore: {
+          title: '📷 老照片修复操作指南',
+          content: `
+            <p><strong>使用步骤：</strong></p>
+            <ul>
+              <li>上传需要修复的老照片</li>
+              <li>确保照片主体清晰可见</li>
+              <li>点击"确定使用"自动填充修复提示词</li>
+              <li>建议选择 4K 分辨率获得最佳效果</li>
+            </ul>
+            <p style="color: var(--accent); margin-top: 12px;">💡 提示：支持黑白照片上色、划痕修复</p>
+          `
+        },
+        idphoto: {
+          title: '📄 证件照操作指南',
+          content: `
+            <p><strong>使用步骤：</strong></p>
+            <ul>
+              <li>上传正面清晰照片</li>
+              <li>确保五官清晰可见，光线均匀</li>
+              <li>点击"确定使用"生成证件照</li>
+              <li>建议选择 3:4 比例</li>
+            </ul>
+            <p style="color: var(--accent); margin-top: 12px;">💡 提示：可生成白底/蓝底/红底证件照</p>
+          `
+        },
+        anime: {
+          title: '🎨 动漫风格操作指南',
+          content: `
+            <p><strong>使用步骤：</strong></p>
+            <ul>
+              <li>上传想要转换的照片</li>
+              <li>点击"确定使用"填充动漫风格提示词</li>
+              <li>可修改提示词调整风格（日式/美式等）</li>
+              <li>建议选择 1:1 或 9:16 比例</li>
+            </ul>
+            <p style="color: var(--accent); margin-top: 12px;">💡 提示：人物照片转换效果最佳</p>
+          `
+        }
+      };
+
+      let currentPrompt = '';
+      let currentGuide = '';
+
+      // 绑定提示词标签点击事件
+      document.querySelectorAll('.prompt-tag').forEach(tag => {
+        tag.addEventListener('click', function() {
+          currentPrompt = this.getAttribute('data-prompt');
+          currentGuide = this.getAttribute('data-guide');
+          showGuide(currentGuide);
+        });
+      });
+
+      function showGuide(guideKey) {
+        const guide = guideContents[guideKey];
+        if (!guide) return;
+        
+        document.getElementById('guideTitle').innerHTML = guide.title;
+        document.getElementById('guideBody').innerHTML = guide.content;
+        document.getElementById('guideModal').classList.add('show');
+      }
+
+      window.closeGuide = () => {
+        document.getElementById('guideModal').classList.remove('show');
+        currentPrompt = '';
+        currentGuide = '';
+      };
+
+      window.confirmGuide = () => {
+        if (currentPrompt) {
+          document.getElementById('prompt').value = currentPrompt;
+          msg('提示词已填充');
+        }
+        closeGuide();
+      };
+
+      // 点击弹窗外部关闭
+      document.getElementById('guideModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeGuide();
+        }
+      });
 
       window.copyFromData = (btn) => {
         const txt = btn.getAttribute('data-text');

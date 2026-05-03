@@ -1,7 +1,7 @@
 $listener = New-Object System.Net.HttpListener
-$listener.Prefixes.Add("http://localhost:8888/")
+$listener.Prefixes.Add("http://localhost:9999/")
 $listener.Start()
-Write-Host "Server running at http://localhost:8888/"
+Write-Host "Server running at http://localhost:9999/"
 Write-Host "Press Ctrl+C to stop"
 
 while ($listener.IsListening) {
